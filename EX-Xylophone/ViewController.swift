@@ -9,7 +9,12 @@
 import UIKit
 import CoreBluetooth
 
-class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralDelegate {
+class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralDelegate, UIPickerViewDelegate, UIPickerViewDataSource{
+    
+    //MARK:
+    @IBOutlet weak var pickerView: UIPickerView!
+    var pickerData = ["1","2","3","4","5","6","7","8"]
+    var selectOneValue = 0
     
     var hc08CentralManager:CBCentralManager!
     var hc08Perripheral:CBPeripheral?
@@ -23,14 +28,43 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
     var SERVICEUUID:String = "FFE0"
     var CHARACTERISTIC:String = "FFE1"
     
-    let pitches = [262, 294, 330, 349, 392, 440, 494]
+    let pitches = [[33, 37, 41, 44, 49, 55, 62],
+                   [65, 73, 82, 87, 98, 110, 123],
+                   [131, 147, 165, 175, 196, 220, 247],
+                   [262, 294, 330, 349, 392, 440, 494],
+                   [523, 587, 659, 698, 784, 880, 988],
+                   [1047, 1175, 1319, 1397, 1568, 1760, 1976],
+                   [2093, 2349, 2637, 2794, 3136, 3520, 3951],
+                   [4186, 4699]]
 //    let pitches = [1, 2, 3, 4, 5, 6, 7]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         hc08CentralManager = CBCentralManager(delegate: self, queue: nil)
+        pickerView.dataSource = self
+        pickerView.delegate = self
     }
-
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 8
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1;
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return pickerData[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if(component == 0){
+            //记录用户选择的值
+            selectOneValue = Int(pickerData[row]) ?? 1
+        }
+//        selectOneValue = Int(pickerData[row]) ?? 1
+    }
+    
     @IBAction func noteReleased(_ sender: UIButton) {
         if (keepScanning == false) {
             let command = ("-1\n").data(using: .utf8)
@@ -42,7 +76,14 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
     
     @IBAction func notePressed(_ sender: UIButton) {
         if (keepScanning == false) {
-            let command = ((String)(pitches[sender.tag - 1]) + "\n").data(using: .utf8)
+            var index = 0
+            if (selectOneValue == 8) {
+                index = 1
+            }
+            else {
+                index = sender.tag - 1
+            }
+            let command = ((String)(pitches[selectOneValue - 1][index]) + "\n").data(using: .utf8)
 //            var value:UInt8 = UInt8(pitches[sender.tag - 1])
 //            let command = Data(bytes: &value, count: MemoryLayout.size(ofValue: value))
             hc08Perripheral?.writeValue(command!, for: hc08Characteristic!, type: .withoutResponse)
