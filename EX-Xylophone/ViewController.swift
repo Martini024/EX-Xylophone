@@ -11,7 +11,6 @@ import CoreBluetooth
 
 class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralDelegate, UIPickerViewDelegate, UIPickerViewDataSource{
     
-    //MARK:
     @IBOutlet weak var pickerView: UIPickerView!
     var pickerData = ["1","2","3","4","5","6","7","8"]
     var selectOneValue = 0

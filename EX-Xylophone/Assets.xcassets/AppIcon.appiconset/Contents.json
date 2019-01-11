@@ -277,13 +277,13 @@
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "512-1.png",
+      "filename" : "512.png",
       "scale" : "1x"
     },
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "1024-1.png",
+      "filename" : "1024.png",
       "scale" : "2x"
     }
   ],
