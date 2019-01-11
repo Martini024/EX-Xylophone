@@ -9,19 +9,19 @@
 /* Begin PBXBuildFile section */
 		5955F10B21E0775000640EE5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5955F10A21E0775000640EE5 /* AppDelegate.swift */; };
 		5955F10D21E0775000640EE5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5955F10C21E0775000640EE5 /* ViewController.swift */; };
-		5955F11021E0775000640EE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5955F10E21E0775000640EE5 /* Main.storyboard */; };
-		5955F11221E0775200640EE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5955F11121E0775200640EE5 /* Assets.xcassets */; };
 		5955F11521E0775200640EE5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5955F11321E0775200640EE5 /* LaunchScreen.storyboard */; };
+		5957A08B21E7F09C007CF50D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5957A08A21E7F09C007CF50D /* Assets.xcassets */; };
+		595EAC4B21E1EF0100EB99A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 595EAC4A21E1EF0100EB99A8 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5955F10721E0775000640EE5 /* EX-Xylophone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EX-Xylophone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5955F10A21E0775000640EE5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5955F10C21E0775000640EE5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		5955F10F21E0775000640EE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		5955F11121E0775200640EE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5955F11421E0775200640EE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5955F11621E0775200640EE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5957A08A21E7F09C007CF50D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		595EAC4A21E1EF0100EB99A8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,12 +54,12 @@
 		5955F10921E0775000640EE5 /* EX-Xylophone */ = {
 			isa = PBXGroup;
 			children = (
+				595EAC4A21E1EF0100EB99A8 /* Main.storyboard */,
 				5955F10A21E0775000640EE5 /* AppDelegate.swift */,
 				5955F10C21E0775000640EE5 /* ViewController.swift */,
-				5955F10E21E0775000640EE5 /* Main.storyboard */,
-				5955F11121E0775200640EE5 /* Assets.xcassets */,
 				5955F11321E0775200640EE5 /* LaunchScreen.storyboard */,
 				5955F11621E0775200640EE5 /* Info.plist */,
+				5957A08A21E7F09C007CF50D /* Assets.xcassets */,
 			);
 			path = "EX-Xylophone";
 			sourceTree = "<group>";
@@ -123,8 +123,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5955F11521E0775200640EE5 /* LaunchScreen.storyboard in Resources */,
-				5955F11221E0775200640EE5 /* Assets.xcassets in Resources */,
-				5955F11021E0775000640EE5 /* Main.storyboard in Resources */,
+				5957A08B21E7F09C007CF50D /* Assets.xcassets in Resources */,
+				595EAC4B21E1EF0100EB99A8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,14 +143,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		5955F10E21E0775000640EE5 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5955F10F21E0775000640EE5 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		5955F11321E0775200640EE5 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
