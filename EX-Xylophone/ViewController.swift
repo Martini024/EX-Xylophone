@@ -3,7 +3,7 @@
 //  EX-Xylophone
 //
 //  Created by JIN ZHAO on 1/5/19.
-//  Copyright © 2019/Users/martini/Desktop/IOS 12 Practice/BLE/EX-Xylophone/EX-Xylophone JIN ZHAO. All rights reserved.
+//  Copyright © 2019 EX-Xylophone JIN ZHAO. All rights reserved.
 //
 
 import UIKit
@@ -13,7 +13,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
     
     @IBOutlet weak var pickerView: UIPickerView!
     var pickerData = ["1","2","3","4","5","6","7","8"]
-    var selectOneValue = 0
+    var selectOneValue = 1
     
     var hc08CentralManager:CBCentralManager!
     var hc08Perripheral:CBPeripheral?
@@ -37,11 +37,13 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
                    [4186, 4699]]
 //    let pitches = [1, 2, 3, 4, 5, 6, 7]
 
+    //MARK: View initialization
     override func viewDidLoad() {
         super.viewDidLoad()
         hc08CentralManager = CBCentralManager(delegate: self, queue: nil)
         pickerView.dataSource = self
         pickerView.delegate = self
+        pickerView.selectRow(0,inComponent:0,animated:true)
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
@@ -58,12 +60,11 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if(component == 0){
-            //记录用户选择的值
-            selectOneValue = Int(pickerData[row]) ?? 1
+            selectOneValue = Int(pickerData[row])!
         }
-//        selectOneValue = Int(pickerData[row]) ?? 1
     }
     
+    //MARK: Set button pressed and release action
     @IBAction func noteReleased(_ sender: UIButton) {
         if (keepScanning == false) {
             let command = ("-1\n").data(using: .utf8)
@@ -77,11 +78,18 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
         if (keepScanning == false) {
             var index = 0
             if (selectOneValue == 8) {
-                index = 1
+                if (sender.tag >= 3) {
+                    index = 1;
+                }
+                else {
+                    index = sender.tag
+                }
             }
             else {
                 index = sender.tag - 1
             }
+            print(selectOneValue)
+            print(index)
             let command = ((String)(pitches[selectOneValue - 1][index]) + "\n").data(using: .utf8)
 //            var value:UInt8 = UInt8(pitches[sender.tag - 1])
 //            let command = Data(bytes: &value, count: MemoryLayout.size(ofValue: value))
@@ -106,36 +114,18 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
         case .unknown:
             message = "The state of the BLE Manager is unknown."
         case .poweredOn:
-//            showAlert = false
             message = "Bluetooth LE is turned on and ready for communication."
             
             print(message)
             keepScanning = true
             _ = Timer(timeInterval: timerScanInterval, target: self, selector: #selector(getter: timerPauseInterval), userInfo: nil, repeats: false)
             
-            // Initiate Scan for Peripherals
-            //Option 1: Scan for all devices
+            //MARK: Scan for all devices
             hc08CentralManager.scanForPeripherals(withServices: nil, options: nil)
-            
-            // Option 2: Scan for devices that have the service you're interested in...
-            //let sensorTagAdvertisingUUID = CBUUID(string: Device.SensorTagAdvertisingUUID)
-            //print("Scanning for SensorTag adverstising with UUID: \(sensorTagAdvertisingUUID)")
-            //centralManager.scanForPeripheralsWithServices([sensorTagAdvertisingUUID], options: nil)
-            
         }
-        
-//        if showAlert {
-//            let alertController = UIAlertController(title: "Central Manager State", message: message, preferredStyle: UIAlertController.Style.alert)
-//            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil)
-//            alertController.addAction(okAction)
-//            self.show(alertController, sender: self)
-//        }
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-//        print("centralManager didDiscoverPeripheral - CBAdvertisementDataLocalNameKey is \"\(CBAdvertisementDataLocalNameKey)\"")
-        
-        // Retrieve the peripheral name from the advertisement data using the "kCBAdvDataLocalName" key
         if let peripheralName = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
             print("NEXT PERIPHERAL NAME: \(peripheralName)")
             print("NEXT PERIPHERAL UUID: \(peripheral.identifier.uuidString)")
@@ -144,9 +134,8 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
                 print("HC-08 FOUND! ADDING NOW!!!")
                 // to save power, stop scanning for other devices
                 keepScanning = false
-//                disconnectButton.enabled = true
                 
-                // save a reference to the sensor tag
+                // save a reference to the hc-08
                 hc08Perripheral = peripheral
                 hc08Perripheral!.delegate = self
                 
@@ -158,11 +147,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("**** SUCCESSFULLY CONNECTED TO HC-08!!!")
-        
-        // Now that we've successfully connected to the SensorTag, let's discover the services.
-        // - NOTE:  we pass nil here to request ALL services be discovered.
-        //          If there was a subset of services we were interested in, we could pass the UUIDs here.
-        //          Doing so saves battery life and saves time.
+        //MARK: we pass nil here to request ALL services be discovered.
         peripheral.discoverServices(nil)
     }
     
@@ -177,7 +162,6 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
         if let services = peripheral.services {
             for service in services {
                 print("Discovered service \(service)")
-//                // If we found either the temperature or the humidity service, discover the characteristics for those services.
                 if (service.uuid == CBUUID(string: SERVICEUUID)) {
                     peripheral.discoverCharacteristics(nil, for: service)
                 }
@@ -192,37 +176,12 @@ class ViewController: UIViewController, CBCentralManagerDelegate,  CBPeripheralD
         }
         
         if let characteristics = service.characteristics {
-            let commandString = "led_on"
-            let command = commandString.data(using: .utf8)
-            
             for characteristic in characteristics {
-                // Temperature Data Characteristic
                 print("Discovered characteristic \(characteristic)")
 
                 if characteristic.uuid == CBUUID(string: CHARACTERISTIC) {
-                    // Enable the IR Temperature Sensor notifications
                     hc08Characteristic = characteristic
-//                    hc08Perripheral?.setNotifyValue(true, for: hc08Characteristic!)
-                    hc08Perripheral?.writeValue(command!, for: hc08Characteristic!, type: .withoutResponse)
-
                 }
-//
-//                // Temperature Configuration Characteristic
-//                if characteristic.UUID == CBUUID(string: Device.TemperatureConfig) {
-//                    // Enable IR Temperature Sensor
-//                    sensorTag?.writeValue(enableBytes, forCharacteristic: characteristic, type: .WithResponse)
-//                }
-//
-//                if characteristic.UUID == CBUUID(string: Device.HumidityDataUUID) {
-//                    // Enable Humidity Sensor notifications
-//                    humidityCharacteristic = characteristic
-//                    sensorTag?.setNotifyValue(true, forCharacteristic: characteristic)
-//                }
-//
-//                if characteristic.UUID == CBUUID(string: Device.HumidityConfig) {
-//                    // Enable Humidity Temperature Sensor
-//                    sensorTag?.writeValue(enableBytes, forCharacteristic: characteristic, type: .WithResponse)
-//                }
             }
         }
     }
